@@ -50,3 +50,7 @@ Para conocer más sobre los aspectos técnicos, consulta la carpeta docs/:
 
 Juan Marcelo Luna Técnico en Informática
 Estudiante de TUPW - FCEFN (UNSJ)
+=======
+# smartstock-fcefn
+Digitaliza la gestión de activos del laboratorio
+>>>>>>> 1955d3b4aaee334dd8cb615eb83ac4a34d07dd84
