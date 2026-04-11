@@ -7,43 +7,66 @@ Utilizamos la sintaxis Mermaid para representar las relaciones.
 
 ```mermaid
 erDiagram
-    CATEGORIES ||--o{ EQUIPMENTS : contiene
-    USERS ||--o{ LOANS : gestiona
-    EQUIPMENTS ||--o{ LOANS : es_prestado
-    LOANS ||--o{ INCIDENTS : genera
+    %% --- Entidades Principales (Fuertes) ---
+    USER ||--o{ LOAN : "solicita / genera"
+    EQUIPMENT }o--|| CATEGORY : "pertenece a"
 
-    USERS {
+    %% --- Entidades Asociativas y Transaccionales ---
+    EQUIPMENT ||--o{ LOAN_ITEMS : "es incluido en"
+    LOAN ||--o{ LOAN_ITEMS : "se compone de"
+    EQUIPMENT ||--o{ INCIDENT : "registra"
+    LOAN ||--o{ INCIDENT : "puede reportar"
+
+    %% --- Definición de Campos (Atributos) ---
+    USER {
         uuid id PK
-        string email
-        string full_name
-        string role
+        string dni UK "Documento Único"
+        string full_name "Nombre Completo"
+        string role "profesor/alumno/tecnico"
+        string status "habilitado/baneado"
+        timestamp created_at
     }
 
-    EQUIPMENTS {
+    EQUIPMENT {
         int id PK
-        string internal_code UK "Código inventario UNSJ"
-        string name
-        string brand
-        string serial_number
+        string internal_code UK "Código Inventario UNSJ (ej: GEO-001)"
+        string serial_number UK "Número de Serie Fabricante"
+        string model
         int category_id FK
-        string status "disponible/prestado/mantenimiento"
+        string status "disponible/reservado/ocupado/reparacion"
+        jsonb kit_components "Detalle de piezas internas (opcional)"
     }
 
-    LOANS {
+    LOAN {
         int id PK
-        int equipment_id FK
-        uuid user_id FK
-        timestamp loan_date
-        timestamp due_date
-        timestamp return_date
+        uuid user_id FK "Responsable del ticket"
+        string type "reserva/prestamo"
+        string status "pendiente/activo/finalizado/cancelado/mora"
+        timestamp start_date "Fecha pactada retiro"
+        timestamp due_date "Fecha límite devolución"
+        timestamp created_at
     }
 
-    INCIDENTS {
+    %% --- Tabla Asociativa (Muchos a Muchos) ---
+    LOAN_ITEMS {
         int id PK
         int loan_id FK
+        int equipment_id FK
+        timestamp effective_return "Fecha real de devolución de este ítem"
+    }
+
+    CATEGORY {
+        int id PK
+        string name UK "ej: Geolocalización"
+    }
+
+    INCIDENT {
+        int id PK
+        int equipment_id FK "Obligatorio"
+        int loan_id FK "Opcional (NULL si es en depósito)"
         string description
-        string severity "leve/moderada/critica"
-        timestamp created_at
+        string severity "leve/critica"
+        timestamp registered_at
     }
 ```
 
