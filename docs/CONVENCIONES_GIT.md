@@ -1,65 +1,87 @@
-Guía de Git Actualizada (Versión SmartStock)
-🌿 Ramas (Branching)
+# Guía de Git y Flujo de Trabajo - SmartStock
 
-    main: Solo código que funciona perfectamente. Es lo que verá el profesor.
+Para asegurar la integridad del código y facilitar la colaboración, utilizaremos una versión simplificada de **GitFlow** y el estándar de **Conventional Commits**.
 
-    develop: Tu zona de trabajo diario. Aquí integras todo.
+---
 
-    feat/nombre-función: Para crear algo nuevo (ej: feat/login-supabase).
+## 1. Estrategia de Ramas (Branching)
 
-    fix/nombre-error: Para arreglar algo roto (ej: fix/error-estilo-boton).
+Dividiremos el desarrollo en ramas según su estabilidad y propósito:
 
-📝 Formato de Commits
+| Rama | Propósito | Regla de Oro |
+| :--- | :--- | :--- |
+| `main` | **Producción / Entrega Final**. Contiene la versión que el profesor evaluará. | Solo código 100% funcional y testeado. |
+| `develop` | **Integración**. Es el tronco común de desarrollo diario. | Aquí se fusionan las funcionalidades terminadas. |
+| `feat/` | **Funcionalidades**. Ejemplo: `feat/filtro-busqueda`. | Se crean desde `develop` y vuelven a `develop`. |
+| `fix/` | **Correcciones**. Ejemplo: `fix/error-modal`. | Para arreglar errores críticos encontrados en `develop` o `main`. |
+| `docs/` | **Documentación**. Ejemplo: `docs/modelo-datos`. | Exclusiva para cambios en archivos Markdown o guías. |
 
-Patrón: tipo(scope): descripción
+---
 
-Tipos:
+## 2. Formato de Commits (Conventional Commits)
 
-    feat: Nueva función (ej: el filtro de búsqueda).
+Utilizaremos una estructura estandarizada para que el historial sea legible y profesional.
 
-    fix: Arreglaste un bug.
+**Patrón:** `tipo(scope): descripción en minúsculas`
 
-    docs: Solo tocaste archivos .md o comentarios.
+### A. Tipos (`type`)
+- **`feat`**: Una nueva funcionalidad (ej. el sistema de login).
+- **`fix`**: Corrección de un fallo (bug).
+- **`docs`**: Cambios solo en la documentación (archivos `.md`).
+- **`style`**: Cambios de apariencia (CSS, Bootstrap) que no afectan la lógica.
+- **`refactor`**: Cambios en el código para mejorarlo, pero que no añaden funciones ni arreglan fallos.
+- **`chore`**: Tareas de mantenimiento, configuración de herramientas o carpetas.
 
-    style: Tocaste CSS o clases de Bootstrap (sin cambiar lógica).
+### B. Ámbitos sugeridos (`scope`)
+- **`ui`**: Elementos de interfaz (Navbar, Footer, Modales).
+- **`auth`**: Lógica de autenticación y Supabase.
+- **`inv`**: Todo lo relacionado al módulo de inventario.
+- **`data`**: Modelos de datos, SQL o archivos de configuración de base de datos.
+- **`docs`**: Documentación interna en la carpeta `/docs`.
 
-    refactor: Cambiaste la estructura de carpetas o limpiaste código.
+---
 
-Scopes sugeridos (Adaptados a tu proyecto):
+## 3. Flujo de Trabajo Paso a Paso
 
-    ui: Para cosas generales de la interfaz.
+Ejemplo: Supongamos que vas a redactar la documentación del **Modelo de Datos**.
 
-    auth: Todo lo relacionado a Supabase Login.
-
-    inv: Relacionado al inventario (features/inventory).
-
-    data: Cambios en SQL o modelos de datos.
-
-    docs: Cambios en la carpeta /docs.
-
-3. Ejemplo de flujo de trabajo (Paso a paso)
-
-Imagina que vas a crear el archivo del Modelo de Datos:
-
-    Creas la rama:
-    git checkout -b feat/modelo-datos
-
-    Creas el archivo docs/MODELO_DATOS.md y escribes el contenido.
-
-    Haces el commit:
+1.  **Crear la rama de trabajo** (desde `develop`):
+    ```bash
+    git checkout develop
+    git checkout -b docs/modelo-datos
+    ```
+2.  **Realizar los cambios**: Creas el archivo `docs/modelo_datos.md` y escribes el contenido.
+3.  **Confirmar los cambios (Commit)**:
+    ```bash
     git add .
     git commit -m "docs(data): definir entidades y relaciones para postgresql"
-
-    Vuelves a develop y fusionas:
+    ```
+4.  **Fusionar en integración**:
+    ```bash
     git checkout develop
-    git merge feat/modelo-datos
+    git merge docs/modelo-datos
+    ```
+5.  **Eliminar la rama temporal** (opcional para limpieza):
+    ```bash
+    git branch -d docs/modelo-datos
+    ```
 
-4. ¿Cómo organizar el versionado (Tags)?
+---
 
-Como es para aprobar materias, te sugiero usar Tags de Git para marcar los hitos de entrega:
+## 4. Versionado y Hitos (Tags)
 
-    v0.1.0-alpha: Cuando tengas los documentos de diseño listos.
+Utilizaremos **Tags** para marcar los momentos clave y entregas:
 
-    v0.5.0-beta: Cuando el login y la lista de equipos funcionen.
+- `v0.1.0-alpha`: **Diseño Inicial**. Documentación, sketches y wireframes completados.
+- `v0.5.0-beta`: **Prototipo Funcional**. Login básico y listado de equipos operativo.
+- `v1.0.0`: **MVP Final**. Versión definitiva para la defensa del examen de Diseño Web 1.
 
-    v1.0.0: Tu MVP final para entregar en la universidad.
+---
+
+## 5. Recomendaciones Pro
+
+- **Haz commits pequeños y frecuentes**: Es mejor tener 10 commits que expliquen el progreso que uno solo gigante que diga "Proyecto terminado".
+- **Escribe los mensajes en presente**: Usa "añadir función" en lugar de "se añadió función".
+- **Sincroniza antes de empezar**: Si trabajas en varios dispositivos, siempre haz un `git pull` antes de empezar tu jornada para evitar conflictos.
+
+---
