@@ -451,15 +451,22 @@
         initReservaModal();
         
         // Verificar autenticación y cargar dashboard
+        import { cargarDashboard } from './src/features/home/home.js';
+
         async function initDashboard() {
             const user = await getCurrentUser();
             if (user) {
                 console.log('✅ Usuario autenticado:', user.email);
-                // Aquí cargaremos los datos del dashboard (próximo paso)
+                await cargarDashboard();
             } else {
                 console.log('👤 Usuario no autenticado - mostrar landing page');
+                // Mostrar mensaje en los contenedores
+                const prestamosContainer = document.getElementById('prestamosContainer');
+                const disponiblesContainer = document.getElementById('disponiblesContainer');
+                if (prestamosContainer) prestamosContainer.innerHTML = '<div class="col-12"><p class="text-muted">Inicia sesión para ver los equipos en préstamo</p></div>';
+                if (disponiblesContainer) disponiblesContainer.innerHTML = '<div class="col-12"><p class="text-muted">Inicia sesión para ver los equipos disponibles</p></div>';
             }
-        }
+        }   
         
         initDashboard();
     </script>
