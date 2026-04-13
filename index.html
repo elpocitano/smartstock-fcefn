@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStock - Gestión de activos</title>
+    <!-- Estilos Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Identidad Marca -->
+    <link href="./css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navbar  -->    
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top c-navbar">
+        <div class="container">
+            <a class="navbar-brand c-navbar__brand" href="index.html">
+                <i class="bi bi-box-seam me-2"></i>
+                <strong>SmartStock</strong>
+            </a>
+
+            <!-- Switch Modo Oscuro -->
+            <div class="form-check form-switch ms-auto">
+                <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+                <label class="form-check-label text-light small" for="darkModeSwitch">
+                    <span id="themeIcon">🌙</span>
+                </label>
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto c-navbar__nav">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="inventario.html">Inventario</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <button class="btn btn-outline-light c-navbar__login-btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#loginModal">
+                            <i class="bi bi-person-circle me-1"></i> Acceso
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-4"> <!-- centra contenido margen redondeado margen top 4  -->
+        <!-- SECCIÓN 1: EQUIPOS EN PRÉSTAMO -->
+        <section class="c-section mb-5">
+            <div class="c-section-header d-flex justify-content-between align-items-end mb-4">
+                <div class="c-section-header__content">
+                    <h2 class="c-section-header__title h4 mb-1">Equipos en préstamo</h2>
+                    <p class="c-section-header__subtitle text-muted small mb-0">Ordenados por fecha de vencimiento</p>
+                </div>
+            </div>
+
+            <div class="row g-4"> <!-- organiza in line bootsrap gutter 4 -->
+                
+                <!-- CARD 1: GPSMAP -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/gpsmap-64s.png" alt="GPSMap 64S" class="c-card__img">
+                            <span class="c-tag c-tag--urgent">⚠️ Vence hoy</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">GPSMap 64S #04</h3>
+                            <div class="c-card__info">
+                                <p><strong>Vence:</strong> Hoy, 16:00 hs</p>
+                                <p><strong>Usuario:</strong> Juan Pérez</p>
+                            </div>
+                        </div>
+                        <div class="c-card__footer">
+                            <button class="btn btn-action w-100" data-bs-toggle="modal" data-bs-target="#modalFicha"
+                                data-nombre="GPSMap 64S #04" data-usuario="Juan Pérez" data-vence="Hoy, 16:00 hs"
+                                data-id="#UNSJ-EX-4421" data-img="./assets/img/gpsmap-64s.png">
+                                Devolver Equipo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 2: Dron DJI -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/dronDji2.png" 
+                                alt="Dron DJI" 
+                                class="c-card__img">
+                            <span class="c-tag c-tag--urgent">⚠️ Vence mañana</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">Dron DJI #05</h3>
+                            <div class="c-card__info">
+                                <p><strong>Vence:</strong> Mañana, 17:00 hs</p>
+                                <p><strong>Usuario:</strong> María González</p>
+                            </div>
+                        </div>
+                        <div class="c-card__footer">
+                            <button class="btn btn-action w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalFicha"
+                                data-nombre="Dron DJI #05" 
+                                data-usuario="María González" 
+                                data-vence="Mañana, 17:00 hs"
+                                data-id="#UNSJ-EX-4422" 
+                                data-img="./assets/img/dronDji2.png">
+                                Devolver Equipo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- CARD 3: Lupa -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/lupa-geo.png" 
+                                alt="Lupa" 
+                                class="c-card__img">
+                            <span class="c-tag c-tag--warning">⚠️ Vence pasado mañana</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">Lupa #06</h3>
+                        <div class="c-card__info">
+                            <p><strong>Vence:</strong> Pasado mañana, 18:00 hs</p>
+                            <p><strong>Usuario:</strong> Pedro Martínez</p>
+                        </div>
+                    </div>
+                    <div class="c-card__footer">
+                        <button class="btn btn-action w-100" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalFicha"
+                            data-nombre="Lupa #06" 
+                            data-usuario="Pedro Martínez" 
+                            data-vence="Pasado mañana, 18:00 hs"
+                            data-id="#UNSJ-EX-4423" 
+                            data-img="./assets/img/lupa-geo.png">
+                            Devolver Equipo
+                        </button>
+                    </div>
+                </div>
+                </div>
+
+        <!-- CARD 4: Pala -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/pala-pleg.png" 
+                                alt="Pala" 
+                                class="c-card__img">
+                            <span class="c-tag c-tag--warning">⚠️ Vence en 3 días</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">Pala #07</h3>
+                            <div class="c-card__info">
+                                <p><strong>Vence:</strong> En 3 días, 19:00 hs</p>
+                                <p><strong>Usuario:</strong> Ana Rodríguez</p>
+                            </div>
+                        </div>
+                        <div class="c-card__footer">
+                            <button class="btn btn-action w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalFicha"
+                                data-nombre="Pico #07" 
+                                data-usuario="Ana Rodríguez" 
+                                data-vence="En 3 días, 19:00 hs"
+                                data-id="#UNSJ-EX-4424" 
+                                data-img="./assets/img/pala-pleg.png">
+                            Devolver Equipo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+        </section>
+
+        <!-- SECCIÓN 2: EQUIPOS DISPONIBLES -->
+        <section class="c-section mt-5 mb-5">
+            <div class="c-section-header d-flex justify-content-between align-items-end mb-4">
+                <div class="c-section-header__content">
+                    <h2 class="c-section-header__title h4 mb-1">Equipos disponibles</h2>
+                    <p class="c-section-header__subtitle text-muted small mb-0">Categorías con mayor frecuencia de uso</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- CATEGORÍA: Electronica -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/dronDji.png" alt="Drones" class="c-card__img">
+                            <span class="c-tag c-tag--normal">Disponible</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">Drones DJI Phantom</h3>
+                            <div class="c-card__info">
+                                <p><strong>Stock:</strong> 3 unidades listas</p>
+                                <p><strong>Uso:</strong> Electronica</p>
+                            </div>
+                        </div>
+                        <div class="c-card__footer">
+                            <button class="btn btn-action w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#reservaModal" 
+                                data-categoria="Electronica">
+                                Retirar / Reservar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CATEGORÍA: Optica -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/micro-petro.png" 
+                                alt="Microscopios Litograficos"     
+                                class="c-card__img">
+                            <span class="c-tag c-tag--normal">Disponible</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">Microscopios Litográficos</h3>
+                            <div class="c-card__info">
+                                <p><strong>Stock:</strong> 3 unidades listas</p>
+                                <p><strong>Uso:</strong> Optica</p>
+                            </div>
+                        </div>
+                        <div class="c-card__footer">
+                            <button class="btn btn-action w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#reservaModal" 
+                                data-categoria="Optica">
+                                Retirar / Reservar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CATEGORÍA: Campo -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="c-card">
+                        <div class="c-card__img-container">
+                            <img src="./assets/img/pala-pleg.png" 
+                                alt="Palas" 
+                                class="c-card__img">
+                            <span class="c-tag c-tag--normal">Disponible</span>
+                        </div>
+                        <div class="c-card__content">
+                            <h3 class="c-card__title">Palas Geo</h3>
+                            <div class="c-card__info">
+                                <p><strong>Stock:</strong> 5 unidades listas</p>
+                                <p><strong>Uso:</strong> Campo</p>
+                            </div>
+                        </div>
+                        <div class="c-card__footer">
+                            <button class="btn btn-action w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#reservaModal" 
+                                data-categoria="Campo">
+                                Retirar / Reservar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            
+        </section>
+    </main>
+
+    <!-- MODAL DEVOLUCIÓN E INCIDENCIAS -->
+    <div class="modal fade" id="modalFicha" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Procesar Devolución</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="d-flex align-items-center mb-4 p-3 rounded-3" style="background-color: var(--bg-img-container);">
+                        <div class="bg-white p-2 rounded-2 me-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                            <img src="" id="fichaImg" class="img-fluid" style="max-height: 100%; object-fit: contain;">
+                        </div>
+                        <div>
+                            <h6 class="mb-0 fw-bold" id="fichaTitulo">---</h6>
+                            <div class="small text-muted"><span id="fichaPatrimonio">---</span> | <span id="fichaUsuario">---</span></div>
+                            <div class="x-small text-danger fw-bold" id="fichaVence">---</div>
+                        </div>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="checkIncidencia">
+                        <label class="form-check-label fw-bold" for="checkIncidencia">¿Registrar Incidencia?</label>
+                    </div>
+                    <div id="seccionIncidencia" class="d-none">
+                        <select class="form-select mb-2 border-danger"><option>Daño Estético</option><option>Falla Funcional</option></select>
+                        <textarea class="form-control" rows="2" placeholder="Describa el problema..."></textarea>
+                    </div>
+                    <div class="alert alert-success d-none mt-3" id="feedbackExito">
+                        <i class="bi bi-check-circle-fill me-2"></i> ¡Reingreso Exitoso!
+                    </div>
+                    <button id="btnProcesarDevolucion" class="btn btn-action w-100 mt-3">Confirmar Reingreso</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RESERVA / RETIRO -->
+    <div class="modal fade" id="reservaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Solicitud Retiro o reserva Equipo</h5>
+                    <button type="button" 
+                        class="btn-close btn-close-white" 
+                        data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formReserva">
+                        <div class="mb-3">
+                            <label class="info-label">Categoría Seleccionada</label>
+                            <input type="text" 
+                            id="modalCategoriaLabel" 
+                            class="form-control border-0 bg-light fw-bold" 
+                            readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="info-label">¿Qué desea hacer?</label>
+                            <select class="form-select border-2" id="tipoOperacion" required>
+                                <option value="retiro">Retirar ahora mismo</option>
+                                <option value="reserva">Reservar para otra fecha</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="info-label">Seleccionar Unidad</label>
+                            <select class="form-select border-2" required>
+                                <option value="">-- Elegir unidad --</option>
+                                <option value="1">Unidad #01</option>
+                                <option value="2">Unidad #02</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 d-none" id="grupoFechaRetiro">
+                            <label class="info-label text-primary">Fecha de Retiro (Reserva)</label>
+                            <input type="date" id="fechaRetiro" class="form-control border-2 border-primary">
+                        </div>
+                        <div class="mb-3">
+                            <label class="info-label">Fecha de Devolución Estimada</label>
+                            <input type="date" class="form-control border-2" required>
+                        </div>
+                        <div class="alert alert-success d-none" id="feedbackReservaExito">
+                            <i class="bi bi-check-circle-fill me-2"></i> <span id="textoExitoReserva">¡Operación exitosa!</span>
+                        </div>
+                        <button type="submit" id="btnConfirmarReserva" class="btn btn-action w-100 mt-2">Confirmar Retiro</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer MÓVIL (solo visible en pantallas pequeñas) -->
+    <footer class="c-mobile-nav fixed-bottom d-md-none">
+        <nav class="nav justify-content-around text-center">
+
+            <a href="index.html" class="nav-link active">
+                <i class="bi bi-house-door fs-5"></i>
+                <div class="x-small">Inicio</div>
+            </a>
+
+            <a href="inventario.html" class="nav-link">
+                <i class="bi bi-box fs-5"></i>
+                <div class="x-small">Inventario</div>
+            </a>
+
+            <a href="reservas.html" class="nav-link">
+                <i class="bi bi-people fs-5"></i>
+                <div class="x-small">Usuarios</div>
+            </a>
+
+            <a href="guia.html" class="nav-link">
+                <i class="bi bi-journal-text fs-5"></i>
+                <div class="x-small">Guía</div>
+            </a>
+
+        </nav>
+    </footer>
+
+
+<!-- Footer DESKTOP (Tradicional) -->
+    <footer class="d-none d-md-block c-footer-desktop py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="c-footer-desktop__title fw-bold mb-3">
+                    <i class="bi bi-box-seam me-2"></i>SmartStock
+                    </h5>
+                    <p class="small opacity-75">Gestión inteligente de activos para la FCEFN - UNSJ. Diseñado para la durabilidad y trazabilidad en el campo.</p>
+                </div>
+            <div class="col-md-2 offset-md-1">
+                <h5 class="small fw-bold text-uppercase mb-3">Navegación</h5>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="index.html" class="text-decoration-none text-reset opacity-75">Inicio</a></li>
+                    <li class="mb-2"><a href="inventario.html" class="text-decoration-none text-reset opacity-75">Inventario</a></li>
+                    <li class="mb-2"><a href="usuarios.html" class="text-decoration-none text-reset opacity-75">Usuarios</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 offset-md-1">
+                <h5 class="small fw-bold text-uppercase mb-3">Contacto Institucional</h5>
+                <p class="small mb-2"><i class="bi bi-geo-alt me-2"></i> Av. Ignacio de la Roza 590 (O), San Juan.</p>
+                <p class="small mb-0"><i class="bi bi-envelope me-2"></i> dep.geologia@unsj.edu.ar</p>
+            </div>
+        </div>
+        <hr class="my-4 opacity-25">
+            <div class="d-flex justify-content-between align-items-center small opacity-50">
+                <p class="mb-0">© 2026 SmartStock v1.0 MVP - FCEFN UNSJ</p>
+                <div class="fs-5">
+                    <i class="bi bi-github ms-3"></i>
+                    <i class="bi bi-linkedin ms-3"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. MODO OSCURO ---
+            const darkModeSwitch = document.getElementById('darkModeSwitch');
+            const htmlElement = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+
+            const applyTheme = (theme) => {
+                htmlElement.setAttribute('data-bs-theme', theme);
+                darkModeSwitch.checked = theme === 'dark';
+                themeIcon.innerText = theme === 'dark' ? '☀️' : '🌙';
+            };
+
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            darkModeSwitch.addEventListener('change', () => {
+                const theme = darkModeSwitch.checked ? 'dark' : 'light';
+                applyTheme(theme);
+                localStorage.setItem('theme', theme);
+            });
+
+            // --- 2. DEVOLUCIONES ---
+            const modalFicha = document.getElementById('modalFicha');
+            const btnProcesarDev = document.getElementById('btnProcesarDevolucion');
+            const checkIncidencia = document.getElementById('checkIncidencia');
+            const seccionIncidencia = document.getElementById('seccionIncidencia');
+            const feedbackExitoDev = document.getElementById('feedbackExito');
+
+            // Usamos esta variable para recordar qué botón/card disparó el modal
+            let triggerButton = null;
+
+            if (modalFicha) {
+                const bsModalFicha = bootstrap.Modal.getOrCreateInstance(modalFicha);
+
+                modalFicha.addEventListener('show.bs.modal', event => {
+                const b = event.relatedTarget;
+                triggerButton = b; // guardamos el botón que abrió el modal
+
+                document.getElementById('fichaTitulo').innerText = b.getAttribute('data-nombre');
+                document.getElementById('fichaUsuario').innerText = b.getAttribute('data-usuario');
+                document.getElementById('fichaPatrimonio').innerText = b.getAttribute('data-id');
+                document.getElementById('fichaVence').innerText = b.getAttribute('data-vence');
+                document.getElementById('fichaImg').src = b.getAttribute('data-img');
+
+                checkIncidencia.checked = false;
+                seccionIncidencia.classList.add('d-none');
+                feedbackExitoDev.classList.add('d-none');
+                btnProcesarDev.classList.remove('d-none');
+                btnProcesarDev.className = "btn btn-action w-100 mt-3";
+                btnProcesarDev.innerText = "Confirmar Reingreso";
+                });
+
+                checkIncidencia.addEventListener('change', () => {
+                const conIncidencia = checkIncidencia.checked;
+                seccionIncidencia.classList.toggle('d-none', !conIncidencia);
+                btnProcesarDev.innerText = conIncidencia ? "Reportar Daño y Devolver" : "Confirmar Reingreso";
+                btnProcesarDev.classList.toggle('btn-danger', conIncidencia);
+                btnProcesarDev.classList.toggle('btn-action', !conIncidencia);
+                });
+
+                btnProcesarDev.addEventListener('click', () => {
+                btnProcesarDev.classList.add('d-none');
+                feedbackExitoDev.classList.remove('d-none');
+
+                // Ocultar la card asociada en la sección "Equipos en préstamo"
+                if (triggerButton) {
+                    // .c-card es el contenedor; .col-* es la columna Bootstrap
+                    const card = triggerButton.closest('.c-card');
+                    const col = triggerButton.closest('.col-12, .col-md-6, .col-lg-4') || card;
+                    if (col) {
+                    col.classList.add('fade');     // si usás .fade de Bootstrap
+                    col.classList.add('show');     // para animación suave, opcional
+                    // o simplemente:
+                    col.style.transition = 'opacity 0.3s, transform 0.3s';
+                    col.style.opacity = '0';
+                    col.style.transform = 'scale(0.95)';
+
+                    setTimeout(() => {
+                        col.remove(); // quita la card del DOM
+                    }, 300);
+                    }
+                }
+
+                // Cerrar modal luego del feedback
+                setTimeout(() => {
+                    const bsInstance = bootstrap.Modal.getInstance(modalFicha) || bsModalFicha;
+                    bsInstance.hide();
+                }, 800);
+                });
+            }
+
+            // --- 3. RESERVAS / RETIRO (sin reload, solo feedback y reset) ---
+            const resModal = document.getElementById('reservaModal');
+            const tipoOp = document.getElementById('tipoOperacion');
+            const grupoFecha = document.getElementById('grupoFechaRetiro');
+            const btnConfirmRes = document.getElementById('btnConfirmarReserva');
+
+            if (resModal) {
+                const bsReservaModal = bootstrap.Modal.getOrCreateInstance(resModal);
+
+                resModal.addEventListener('show.bs.modal', e => {
+                    const categoria = e.relatedTarget.getAttribute('data-categoria');
+                    const inputCategoria = document.getElementById('modalCategoriaLabel');
+
+                    inputCategoria.value = categoria; // recibe el valor del atributo catgoria
+                    inputCategoria.readOnly = true; // esto asegura que no se modifique
+
+                    document.getElementById('feedbackReservaExito').classList.add('d-none');
+                    btnConfirmRes.classList.remove('d-none');
+                    btnConfirmRes.innerText = "Confirmar Retiro";
+                    grupoFecha.classList.add('d-none');
+                    tipoOp.value = 'retiro';
+                    document.getElementById('formReserva').reset();
+                });
+
+                tipoOp.addEventListener('change', () => {
+                    const isReserva = tipoOp.value === 'reserva';
+                    grupoFecha.classList.toggle('d-none', !isReserva);
+                    btnConfirmRes.innerText = isReserva ? "Confirmar Reserva" : "Confirmar Retiro";
+                });
+
+                document.getElementById('formReserva').addEventListener('submit', (e) => {
+                e.preventDefault();
+                btnConfirmRes.classList.add('d-none');
+
+                const texto = tipoOp.value === 'reserva'
+                    ? "¡Reserva Exitosa!"
+                    : "¡Retiro Exitoso!";
+
+                document.getElementById('textoExitoReserva').innerText = texto;
+                document.getElementById('feedbackReservaExito').classList.remove('d-none');
+
+                setTimeout(() => {
+                    // Cerrar modal y limpiar formulario
+                    const bsInstance = bootstrap.Modal.getInstance(resModal) || bsReservaModal;
+                    bsInstance.hide();
+                    document.getElementById('formReserva').reset();
+                }, 1000);
+                });
+            }
+            });
+    </script>
+</body>
+</html>

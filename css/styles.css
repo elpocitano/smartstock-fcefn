@@ -1,0 +1,580 @@
+==========================================================================
+   styles.css — SmartStock v1.0
+   Sistema de diseño basado en 3 capas de variables + nomenclatura BEM
+   (Bloque _ Elemento _ Modificador) Clases para diseño, id para JS 
+   CAPAS DE VARIABLES:
+     CAPA 1 → Primitivos de marca:  colores "crudos", NUNCA cambian entre temas
+     CAPA 2 → Semánticos:           asignan significado a los primitivos, SÍ cambian en dark
+     CAPA 3 → Componentes (BEM):    usan variables semánticas, nunca hex directo
+
+   BEM (Block__Element--Modifier):
+     .c-navbar              → Bloque
+     .c-navbar__brand       → Elemento del bloque
+     .c-navbar__link--active→ Modificador del elemento
+   ========================================================================== */
+
+
+/* ==========================================================================
+   CAPA 1 — PRIMITIVOS DE MARCA, HACEN A LA IDENTIDAD
+   Son los colores "reales" de la identidad visual. No cambian nunca.
+   Si mañana el verde bosque cambia a #1a4a15, solo se edita aquí.
+   ========================================================================== */
+:root {
+    --geo-pizarra: #2c3e50; /* Azul oscuro → estructura, navbar, pie */
+    --geo-bosque:  #2d5a27; /* Verde oscuro → acción principal        */
+    --geo-tierra:  #d35400; /* Naranja      → marca, alertas, urgente */
+    --geo-piedra:  #f8f9fa; /* Gris claro   → fondo general           */
+    --geo-blanco:  #ffffff; /* Blanco puro  → fondo de cards          */
+}
+
+
+/* ==========================================================================
+   CAPA 2 — SEMÁNTICOS (Modo Claro — por defecto)
+   Conectan los primitivos con su SIGNIFICADO en la interfaz.
+   Cambian en modo oscuro sin tocar los primitivos.
+   ========================================================================== */
+:root {
+    /* Fondos generales */
+    --bg-body:          var(--geo-piedra);
+    --bg-card:          var(--geo-blanco);
+    --bg-img-container: #e2e8f0;
+
+    /* Tipografía */
+    --text-main:  var(--geo-pizarra);
+    --text-muted: #4a5568;
+
+    /* Bordes */
+    --border-color: rgba(0, 0, 0, 0.08);
+
+    /* Componentes estructurales (cada seccoin tiene su propia variable) */
+    --navbar-bg:       var(--geo-pizarra);
+    --footer-bg:       var(--geo-pizarra);
+    --modal-header-bg: var(--geo-pizarra);
+
+    /* --- Badges / Tags de estado --- */
+    /* Fondos: cada estado tiene su variable semántica */
+    --tag-bg-urgent:  var(--geo-tierra); /* Rojo/naranja → vence HOY         */
+    --tag-bg-warning: #e6a817;           /* Amarillo     → vence en 1-3 días  */
+    --tag-bg-ok:      var(--geo-bosque); /* Verde        → a tiempo           */
+    --tag-bg-normal:  var(--geo-pizarra);/* Gris         → sin estado urgente */
+
+    /* Textos: el amarillo necesita texto oscuro para accesibilidad (WCAG) */
+    --tag-text-urgent:  white;
+    --tag-text-warning: #1a1a1a;
+    --tag-text-ok:      white;
+    --tag-text-normal:  white;
+}
+
+
+/* ==========================================================================
+   CAPA 2 — SEMÁNTICOS (Modo Oscuro)
+   Solo se redefinen las variables que cambian; los primitivos NUNCA se tocan.
+   ========================================================================== */
+[data-bs-theme="dark"] {
+    /* Fondos generales */
+    --bg-body:          #121212;
+    --bg-card:          #1e1e1e;
+    --bg-img-container: #2c3e50;
+
+    /* Tipografía */
+    --text-main:  #f8f9fa;
+    --text-muted: #a0aec0;
+
+    /* Bordes */
+    --border-color: rgba(255, 255, 255, 0.1);
+
+    /* Componentes estructurales — versión oscura */
+    --navbar-bg:       #000000;
+    --footer-bg:       #0a0a0a;
+    --modal-header-bg: #111111;
+
+    /* Badges: solo el amarillo cambia para mejorar contraste en fondo oscuro */
+    --tag-bg-warning: #d4950f;
+}
+
+
+/* ==========================================================================
+   CAPA 2 — REFUERZOS DE MODO OSCURO PARA COMPONENTES DE BOOTSTRAP
+   Bootstrap no usa nuestras variables, entonces lo sobreescribimos con !important
+   ========================================================================== */
+[data-bs-theme="dark"] .bg-light,
+[data-bs-theme="dark"] .rounded-3 {
+    background-color: var(--bg-img-container) !important;
+}
+
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: #2b2b2b !important;
+    border-color:     #444    !important;
+    color:            #ffffff !important;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: #888;
+}
+
+/* Input de solo lectura: muestra el valor destacado en color tierra */
+[data-bs-theme="dark"] .form-control[readonly] {
+    background-color: #1a1a1a     !important;
+    color:            var(--geo-tierra) !important;
+    border: none;
+}
+
+
+/* ==========================================================================
+   CAPA 3 — ESTILOS BASE DEL DOCUMENTO
+   Usan variables semánticas. Nunca hex directo aquí (reutilizacion).
+   ========================================================================== */
+body {
+    background-color: var(--bg-body);
+    color:            var(--text-main);
+    font-family:      'Open Sans', sans-serif;
+    transition:       background-color 0.3s, color 0.3s;
+    padding-bottom:   80px; /* espacio para el footer móvil fijo */
+}
+
+/* En desktop el footer no es fijo, no necesita padding */
+@media (min-width: 768px) {
+    body { padding-bottom: 0; }
+}
+
+/* Tipografía de display: títulos y marca con Montserrat */
+h1, h2, h3, .navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Utilidad extra pequeña: usada en etiquetas de pie de ícono */
+.x-small {
+    font-size:      0.65rem;
+    text-transform: uppercase;
+    font-weight:    600;
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: c-navbar
+   Bloque: .c-navbar
+   Elementos: .c-navbar__brand / .c-navbar__nav / .c-navbar__login-btn
+   ========================================================================== */
+.c-navbar {
+    background-color: var(--navbar-bg) !important; /* usa semántico, no primitivo */
+    box-shadow:       0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Elemento: marca/logo */
+.c-navbar__brand {
+    font-size: 1.5rem;
+}
+
+/* Elemento: links de navegación */
+.c-navbar__nav .nav-link {
+    color:      rgba(255, 255, 255, 0.8) !important;
+    transition: color 0.2s;
+}
+
+/* Modificador: link activo o en hover */
+.c-navbar__nav .nav-link:hover,
+.c-navbar__nav .nav-link.active {
+    color: var(--geo-tierra) !important;
+}
+
+/* Elemento: botón de acceso/login */
+.c-navbar__login-btn {
+    border-color: var(--geo-tierra);
+    color:        white;
+}
+
+.c-navbar__login-btn:hover {
+    background-color: var(--geo-tierra);
+    color:            white;
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: c-section-header
+   Bloque: .c-section-header
+   Elementos: .c-section-header__title / .c-section-header__subtitle / etc
+   ========================================================================== */
+.c-section {
+    padding-bottom: 2rem;
+}
+
+/* Bloque: borde izquierdo como acento de marca */
+.c-section-header {
+    border-left:  4px solid var(--geo-tierra);
+    padding-left: 1rem;
+}
+
+/* Elemento: título principal */
+.c-section-header__title {
+    color:          var(--text-main);
+    font-weight:    700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Elemento: subtítulo secundario */
+.c-section-header__subtitle {
+    color: var(--text-muted) !important;
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: c-card
+   Bloque:    .c-card
+   Elementos: .c-card__img-container / .c-card__img / .c-card__content
+              .c-card__title / .c-card__info / .c-card__footer / .c-card__btn
+   ========================================================================== */
+
+/* Bloque: tarjeta con elevación */
+.c-card {
+    background-color: var(--bg-card) !important;
+    border-radius:    12px;
+    overflow:         hidden;
+    height:           100%;
+    display:          flex;
+    flex-direction:   column;
+    box-shadow:       0 4px 10px rgba(0, 0, 0, 0.1);
+    border:           1px solid var(--border-color);
+    transition:       transform 0.2s;
+}
+
+/* Modificador implícito: hover levanta la card (feedback visual) */
+.c-card:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+
+/* Elemento: contenedor de imagen centrada */
+.c-card__img-container {
+    background-color: var(--bg-img-container);
+    height:           160px;
+    display:          flex;
+    align-items:      center;
+    justify-content:  center;
+    position:         relative; /* necesario para posicionar el badge .c-tag */
+    padding:          15px;
+}
+
+/* Elemento: imagen del equipo */
+.c-card__img {
+    max-height:  100%;
+    width:       auto;
+    object-fit:  contain;
+}
+
+/* Elemento: área de texto */
+.c-card__content {
+    padding:   1.2rem;
+    flex-grow: 1; /* ocupa el espacio disponible, empuja el footer al fondo */
+}
+
+/* Elemento: nombre del equipo */
+.c-card__title {
+    font-size:     1.1rem;
+    font-weight:   700;
+    color:         var(--text-main);
+    margin-bottom: 0.8rem;
+}
+
+/* Elemento: datos del equipo */
+.c-card__info p {
+    margin-bottom: 0.3rem;
+    font-size:     0.9rem;
+    color:         var(--text-muted);
+}
+
+/* Elemento: pie con botones */
+.c-card__footer {
+    padding: 0 1.2rem 1.2rem;
+}
+
+/* Elemento: botón principal de la card */
+.c-card__btn {
+    background-color: var(--geo-bosque) !important;
+    color:            white !important;
+    font-weight:      bold;
+    padding:          12px;
+    border:           none;
+    border-radius:    8px;
+    width:            100%;
+}
+
+/* Modificador: feedback táctil móvil */
+.c-card__btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: c-tag  (badges de estado)
+   Bloque:     .c-tag
+   Modificadores: --urgent / --warning / --ok / --normal
+   
+   La clase base define posición y tipografía.
+   Los modificadores aplican color usando variables semánticas (Capa 2).
+   JS aplica la logica asignando el modificador correcto según los días hasta el vencimiento.
+   ========================================================================== */
+
+/* Bloque: posicionado sobre la imagen */
+.c-tag {
+    position:      absolute;
+    top:           10px;
+    right:         10px;
+    padding:       4px 10px;
+    border-radius: 6px;
+    font-size:     0.7rem;
+    font-weight:   bold;
+}
+
+/* Modificador: vence HOY */
+.c-tag--urgent {
+    background-color: var(--tag-bg-urgent);
+    color:            var(--tag-text-urgent);
+}
+
+/* Modificador: vence en 1-3 días */
+.c-tag--warning {
+    background-color: var(--tag-bg-warning);
+    color:            var(--tag-text-warning);
+}
+
+/* Modificador: vence en más de 3 días */
+.c-tag--ok {
+    background-color: var(--tag-bg-ok);
+    color:            var(--tag-text-ok);
+}
+
+/* Modificador: sin fecha próxima / sin estado */
+.c-tag--normal {
+    background-color: var(--tag-bg-normal);
+    color:            var(--tag-text-normal);
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: btn-action
+   No sigue BEM porque extiende la convención de Bootstrap (.btn) que es la base
+   ========================================================================== */
+
+/* Botón principal de acción (reservar, confirmar, etc.) */
+.btn-action {
+    background-color: var(--geo-bosque) !important;
+    color:            white !important;
+    border:           none;
+    padding:          12px;
+    border-radius:    10px;
+    font-weight:      600;
+}
+
+/* Focus accesible: resplandor verde para teclado/tab */
+.btn-action:focus {
+    box-shadow: 0 0 0 0.25rem rgba(45, 90, 39, 0.4);
+}
+
+/* Movil: Feedback táctil para botones principales (también aplica a btn-primary y btn-danger) */
+.btn-action,
+.btn-primary,
+.btn-danger {
+    transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.btn-action:active,
+.btn-primary:active,
+.btn-danger:active {
+    transform: scale(0.95);   /* se achica al presionar */
+    filter:    brightness(0.8); /* se oscurece */
+}
+
+/* Desktop: Hover solo en dispositivos con mouse (no en touch) */
+@media (hover: hover) {
+    .btn-action:hover {
+        filter: brightness(1.1);
+        cursor: pointer;
+    }
+}
+
+/* btn-danger usa color tierra (alerta) en lugar del rojo de Bootstrap */
+.btn-danger {
+    background-color: var(--geo-tierra) !important;
+    border:           none;
+    padding:          12px;
+    font-weight:      600;
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: modal
+   Estructura de Bootstrap sobreescrita con nuestras variables semánticas
+   ========================================================================== */
+
+/* Contenido principal del modal */
+.modal-content {
+    background-color: var(--bg-card);
+    color:            var(--text-main);
+    border-radius:    20px;
+}
+
+/* Cabecera del modal: usa semántico, no primitivo */
+.modal-header {
+    background-color: var(--modal-header-bg);
+    color:            white;
+}
+
+/* Etiqueta de campo (ej: "USUARIO", "PATRIMONIO") */
+.info-label {
+    font-size:      0.8rem;
+    color:          var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* Valor del campo destacado en verde bosque */
+.info-value {
+    font-weight: 600;
+    color:       var(--geo-bosque);
+}
+
+/* Contenedor de imagen en modal: siempre blanco para que el logo resalte */
+.modal-body .bg-white {
+    background-color: #ffffff !important;
+    border:           1px solid var(--border-color);
+    box-shadow:       inset 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Imagen del modal: zoom suave al pasar el mouse */
+#fichaImg {
+    transition: transform 0.3s;
+}
+#fichaImg:hover {
+    transform: scale(1.1);
+}
+
+/* Sección de incidencia: se muestra/oculta con JS */
+#seccionIncidencia {
+    border-top: 1px solid var(--border-color);
+    margin-top: 15px;
+    padding-top: 15px;
+    transition: all 0.4s ease-in-out;
+}
+
+/* Animación de entrada cuando se revela la sección */
+#seccionIncidencia:not(.d-none) {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0);     }
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE: alert-success
+   Sobreescribe el verde de Bootstrap con el verde bosque de la marca (identidad)
+   ========================================================================== */
+.alert-success {
+    background-color: var(--geo-bosque) !important;
+    color:            white !important;
+    border:           none;
+    text-align:       center;
+    font-weight:      600;
+    animation:        fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE MOVILE: c-mobile-nav  (footer fijo en móviles)
+   Bloque:    .c-mobile-nav
+   Elementos: .c-mobile-nav .nav-link
+   Modificador: .nav-link.active
+   ========================================================================== */
+.c-mobile-nav {
+    background-color: var(--navbar-bg) !important; /* mismo fondo que navbar */
+    border-top:       1px solid rgba(255, 255, 255, 0.1);
+    padding:          5px 0;
+}
+
+.c-mobile-nav .nav-link {
+    color:      rgba(255, 255, 255, 0.6);
+    transition: color 0.2s;
+}
+
+/* Modificador: sección activa resaltada con color tierra */
+.c-mobile-nav .nav-link.active {
+    color: var(--geo-tierra) !important;
+}
+
+/* Espacio para que el contenido no quede oculto bajo el nav fijo */
+@media (max-width: 991px) {
+    body { padding-bottom: 70px; }
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE MOVILE: c-footer-mobile
+   Bloque:    .c-footer-mobile
+   Elementos: .c-footer-mobile__nav / .c-footer-mobile__link
+   Modificador: .c-footer-mobile__link.active
+   ========================================================================== */
+.c-footer-mobile {
+    position:         fixed;
+    bottom:           0;
+    left:             0;
+    width:            100%;
+    background-color: var(--footer-bg); /* usa semántico */
+    color:            white;
+    z-index:          1030;
+    box-shadow:       0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Elemento: barra de íconos distribuidos */
+.c-footer-mobile__nav {
+    display:         flex;
+    justify-content: space-around;
+    align-items:     center;
+    height:          65px;
+}
+
+/* Elemento: cada ítem de navegación */
+.c-footer-mobile__link {
+    flex:            1;
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    justify-content: center;
+    color:           rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size:       0.7rem;
+    transition:      all 0.2s;
+}
+
+.c-footer-mobile__link i {
+    font-size:     1.4rem;
+    margin-bottom: 2px;
+}
+
+/* Modificador: ítem activo */
+.c-footer-mobile__link.active {
+    color: var(--geo-tierra);
+}
+
+/* Modo oscuro: footer aún más oscuro */
+[data-bs-theme="dark"] .c-footer-mobile {
+    background-color: var(--footer-bg); /* ya definido en dark como #0a0a0a */
+    border-top:       1px solid var(--border-color);
+}
+
+
+/* ==========================================================================
+   CAPA 3 — COMPONENTE DESKTOP: c-footer-desktop
+   Bloque: .c-footer-desktop
+   ========================================================================== */
+.c-footer-desktop {
+    background-color: var(--footer-bg); /* usa semántico */
+    color:            white;
+    margin-top:       5rem;
+}
