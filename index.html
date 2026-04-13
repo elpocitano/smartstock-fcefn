@@ -431,152 +431,39 @@
             </div>
         </div>
     </footer>
-
+ 
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- 1. MODO OSCURO ---
-            const darkModeSwitch = document.getElementById('darkModeSwitch');
-            const htmlElement = document.documentElement;
-            const themeIcon = document.getElementById('themeIcon');
-
-            const applyTheme = (theme) => {
-                htmlElement.setAttribute('data-bs-theme', theme);
-                darkModeSwitch.checked = theme === 'dark';
-                themeIcon.innerText = theme === 'dark' ? '☀️' : '🌙';
-            };
-
-            applyTheme(localStorage.getItem('theme') || 'light');
-
-            darkModeSwitch.addEventListener('change', () => {
-                const theme = darkModeSwitch.checked ? 'dark' : 'light';
-                applyTheme(theme);
-                localStorage.setItem('theme', theme);
-            });
-
-            // --- 2. DEVOLUCIONES ---
-            const modalFicha = document.getElementById('modalFicha');
-            const btnProcesarDev = document.getElementById('btnProcesarDevolucion');
-            const checkIncidencia = document.getElementById('checkIncidencia');
-            const seccionIncidencia = document.getElementById('seccionIncidencia');
-            const feedbackExitoDev = document.getElementById('feedbackExito');
-
-            // Usamos esta variable para recordar qué botón/card disparó el modal
-            let triggerButton = null;
-
-            if (modalFicha) {
-                const bsModalFicha = bootstrap.Modal.getOrCreateInstance(modalFicha);
-
-                modalFicha.addEventListener('show.bs.modal', event => {
-                const b = event.relatedTarget;
-                triggerButton = b; // guardamos el botón que abrió el modal
-
-                document.getElementById('fichaTitulo').innerText = b.getAttribute('data-nombre');
-                document.getElementById('fichaUsuario').innerText = b.getAttribute('data-usuario');
-                document.getElementById('fichaPatrimonio').innerText = b.getAttribute('data-id');
-                document.getElementById('fichaVence').innerText = b.getAttribute('data-vence');
-                document.getElementById('fichaImg').src = b.getAttribute('data-img');
-
-                checkIncidencia.checked = false;
-                seccionIncidencia.classList.add('d-none');
-                feedbackExitoDev.classList.add('d-none');
-                btnProcesarDev.classList.remove('d-none');
-                btnProcesarDev.className = "btn btn-action w-100 mt-3";
-                btnProcesarDev.innerText = "Confirmar Reingreso";
-                });
-
-                checkIncidencia.addEventListener('change', () => {
-                const conIncidencia = checkIncidencia.checked;
-                seccionIncidencia.classList.toggle('d-none', !conIncidencia);
-                btnProcesarDev.innerText = conIncidencia ? "Reportar Daño y Devolver" : "Confirmar Reingreso";
-                btnProcesarDev.classList.toggle('btn-danger', conIncidencia);
-                btnProcesarDev.classList.toggle('btn-action', !conIncidencia);
-                });
-
-                btnProcesarDev.addEventListener('click', () => {
-                btnProcesarDev.classList.add('d-none');
-                feedbackExitoDev.classList.remove('d-none');
-
-                // Ocultar la card asociada en la sección "Equipos en préstamo"
-                if (triggerButton) {
-                    // .c-card es el contenedor; .col-* es la columna Bootstrap
-                    const card = triggerButton.closest('.c-card');
-                    const col = triggerButton.closest('.col-12, .col-md-6, .col-lg-4') || card;
-                    if (col) {
-                    col.classList.add('fade');     // si usás .fade de Bootstrap
-                    col.classList.add('show');     // para animación suave, opcional
-                    // o simplemente:
-                    col.style.transition = 'opacity 0.3s, transform 0.3s';
-                    col.style.opacity = '0';
-                    col.style.transform = 'scale(0.95)';
-
-                    setTimeout(() => {
-                        col.remove(); // quita la card del DOM
-                    }, 300);
-                    }
-                }
-
-                // Cerrar modal luego del feedback
-                setTimeout(() => {
-                    const bsInstance = bootstrap.Modal.getInstance(modalFicha) || bsModalFicha;
-                    bsInstance.hide();
-                }, 800);
-                });
+ 
+     <!-- Scripts modulares -->
+    <script src="config.js"></script>
+    <script type="module">
+        import { initTheme } from './src/shared/theme.js';
+        import { initDevolucionModal, initReservaModal } from './src/shared/modals.js';
+        import { getCurrentUser } from './src/shared/auth.js';
+        import { supabase } from './src/shared/supabaseClient.js';
+        
+        // Inicializar tema oscuro
+        initTheme();
+        
+        // Inicializar modales
+        initDevolucionModal();
+        initReservaModal();
+        
+        // Verificar autenticación y cargar dashboard
+        async function initDashboard() {
+            const user = await getCurrentUser();
+            if (user) {
+                console.log('✅ Usuario autenticado:', user.email);
+                // Aquí cargaremos los datos del dashboard (próximo paso)
+            } else {
+                console.log('👤 Usuario no autenticado - mostrar landing page');
             }
-
-            // --- 3. RESERVAS / RETIRO (sin reload, solo feedback y reset) ---
-            const resModal = document.getElementById('reservaModal');
-            const tipoOp = document.getElementById('tipoOperacion');
-            const grupoFecha = document.getElementById('grupoFechaRetiro');
-            const btnConfirmRes = document.getElementById('btnConfirmarReserva');
-
-            if (resModal) {
-                const bsReservaModal = bootstrap.Modal.getOrCreateInstance(resModal);
-
-                resModal.addEventListener('show.bs.modal', e => {
-                    const categoria = e.relatedTarget.getAttribute('data-categoria');
-                    const inputCategoria = document.getElementById('modalCategoriaLabel');
-
-                    inputCategoria.value = categoria; // recibe el valor del atributo catgoria
-                    inputCategoria.readOnly = true; // esto asegura que no se modifique
-
-                    document.getElementById('feedbackReservaExito').classList.add('d-none');
-                    btnConfirmRes.classList.remove('d-none');
-                    btnConfirmRes.innerText = "Confirmar Retiro";
-                    grupoFecha.classList.add('d-none');
-                    tipoOp.value = 'retiro';
-                    document.getElementById('formReserva').reset();
-                });
-
-                tipoOp.addEventListener('change', () => {
-                    const isReserva = tipoOp.value === 'reserva';
-                    grupoFecha.classList.toggle('d-none', !isReserva);
-                    btnConfirmRes.innerText = isReserva ? "Confirmar Reserva" : "Confirmar Retiro";
-                });
-
-                document.getElementById('formReserva').addEventListener('submit', (e) => {
-                e.preventDefault();
-                btnConfirmRes.classList.add('d-none');
-
-                const texto = tipoOp.value === 'reserva'
-                    ? "¡Reserva Exitosa!"
-                    : "¡Retiro Exitoso!";
-
-                document.getElementById('textoExitoReserva').innerText = texto;
-                document.getElementById('feedbackReservaExito').classList.remove('d-none');
-
-                setTimeout(() => {
-                    // Cerrar modal y limpiar formulario
-                    const bsInstance = bootstrap.Modal.getInstance(resModal) || bsReservaModal;
-                    bsInstance.hide();
-                    document.getElementById('formReserva').reset();
-                }, 1000);
-                });
-            }
-            });
+        }
+        
+        initDashboard();
     </script>
+    
+
 </body>
 </html>
