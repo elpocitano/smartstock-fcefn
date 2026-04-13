@@ -1,1 +1,7 @@
-.env
+# .gitignore
+config.js          # Credenciales de Supabase
+.env               # Variables de entorno
+node_modules/      # Dependencias
+*.log              # Archivos de log
+.DS_Store          # Archivos de sistema macOS
+Thumbs.db          # Archivos de sistema Windows
